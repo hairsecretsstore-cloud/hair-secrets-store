@@ -14,9 +14,9 @@ export interface ProductVariant {
   id: string;
   /** e.g. length in inches */
   length: number;
-  /** price in whole UGX */
+  /** price in US cents */
   price: number;
-  /** compare-at price in whole UGX (for showing discounts) */
+  /** compare-at price in US cents (for showing discounts) */
   compareAt?: number;
   stock: number;
   sku: string;

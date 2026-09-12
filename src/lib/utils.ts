@@ -5,14 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/** Format a whole-number amount as UGX currency (e.g. "USh 680,000"). */
-export function formatPrice(amount: number, currency = "UGX") {
-  return new Intl.NumberFormat("en-UG", {
+/** Format a price stored in US cents as USD (e.g. 1261 → "$12.61", 25000 → "$250"). */
+export function formatPrice(cents: number, currency = "USD") {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+    maximumFractionDigits: 2,
+  }).format(cents / 100);
 }
 
 export function slugify(value: string) {

@@ -6,14 +6,14 @@ import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { ProductImage } from "@/components/ui/product-image";
 
-const FREE_SHIP_THRESHOLD = 1000000; // USh 1,000,000
+const FREE_SHIP_THRESHOLD = 30000; // $300 (US cents)
 
 export default function CartPage() {
   const items = useCart((s) => s.items);
   const setQty = useCart((s) => s.setQty);
   const remove = useCart((s) => s.remove);
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
-  const shipping = subtotal >= FREE_SHIP_THRESHOLD || subtotal === 0 ? 0 : 100000;
+  const shipping = subtotal >= FREE_SHIP_THRESHOLD || subtotal === 0 ? 0 : 2500;
   const remaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
 
   if (items.length === 0) {

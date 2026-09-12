@@ -17,8 +17,6 @@ const COUNTRY_CODES: Record<string, string> = {
   "South Africa": "ZA",
 };
 
-const UGX_PER_USD = 3800; // rough customs conversion
-
 async function requireAdmin() {
   if (!hasSupabase) return { error: "Supabase not configured", status: 503 as const };
   const ssr = await createClient();
@@ -98,7 +96,7 @@ export async function POST(request: Request) {
         (i: { name?: string; price?: number; quantity?: number }) => ({
           description: i.name ?? "Hair extension",
           quantity: i.quantity ?? 1,
-          priceUSD: Math.max(1, Math.round((i.price ?? 0) / UGX_PER_USD)),
+          priceUSD: Math.max(1, Math.round((i.price ?? 0) / 100)),
           weightKg: 0.2,
         }),
       );

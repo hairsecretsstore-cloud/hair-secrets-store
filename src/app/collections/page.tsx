@@ -10,7 +10,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Collections",
   description:
-    "Explore our curated collections of raw human hair — Signature Raw, Raw Brazilian, Cambodian Luxe and Vietnamese Silk.",
+    "Explore our curated collections of raw human hair — Signature Raw, Raw Brazilian, Cambodian Luxe, Vietnamese Silk and Hair Care Essentials.",
 };
 
 export default async function CollectionsPage() {
@@ -27,8 +27,8 @@ export default async function CollectionsPage() {
           <span className="eyebrow">Curated by texture &amp; origin</span>
           <h1 className="mt-3 text-5xl text-espresso lg:text-6xl">Collections</h1>
           <p className="mx-auto mt-4 max-w-xl text-espresso/70">
-            Four signature lines, each hand-selected for a distinct feel, hold,
-            and lifespan.
+            Signature lines and considered essentials, each hand-selected for a
+            distinct feel, hold, and lifespan.
           </p>
         </div>
       </section>
@@ -52,7 +52,7 @@ export default async function CollectionsPage() {
                   />
                 </div>
                 <div className="flex flex-col justify-center p-8 lg:p-14">
-                  <span className="eyebrow">{count} styles</span>
+                  <span className="eyebrow">{count} {count === 1 ? "style" : "styles"}</span>
                   <h2 className="mt-3 text-4xl text-espresso lg:text-5xl">
                     {c.name}
                   </h2>

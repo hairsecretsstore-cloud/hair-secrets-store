@@ -8,7 +8,7 @@ import { useCart } from "@/lib/store";
 import { formatPrice, cn } from "@/lib/utils";
 import { ProductImage } from "@/components/ui/product-image";
 
-const FREE_SHIP_THRESHOLD = 1000000; // USh 1,000,000
+const FREE_SHIP_THRESHOLD = 30000; // $300 (US cents)
 
 type PayMethod = "mobile" | "card";
 
@@ -23,7 +23,7 @@ export default function CheckoutPage() {
   const [country, setCountry] = useState("Uganda");
 
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
-  const shipping = subtotal >= FREE_SHIP_THRESHOLD ? 0 : 100000;
+  const shipping = subtotal >= FREE_SHIP_THRESHOLD ? 0 : 2500;
   const total = subtotal + shipping;
   // HSS Payment Plan Policy: pay in full, or secure with a 70% deposit
   // (30% balance due on delivery).

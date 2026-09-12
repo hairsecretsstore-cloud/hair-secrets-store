@@ -131,8 +131,8 @@ export default function AdminSettings() {
           <Field label="Store name" value={site.name} />
           <Field label="Support email" value={site.email} />
           <Field label="Phone" value={site.phone} />
-          <Field label="Currency" value="UGX (USh)" />
-          <Field label="Free shipping threshold" value="USh 1,000,000" />
+          <Field label="Currency" value="USD ($)" />
+          <Field label="Free shipping threshold" value="$300" />
           <Field
             label="Location"
             value={`${site.address.area}, ${site.address.city}`}

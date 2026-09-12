@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const initial = [
   { code: "WELCOME10", type: "10% off", usage: "482 uses", active: true },
   { code: "FREESHIP", type: "Free shipping", usage: "1,204 uses", active: true },
-  { code: "LUXE20", type: "20% off orders USh 2M+", usage: "76 uses", active: true },
+  { code: "LUXE20", type: "20% off orders $500+", usage: "76 uses", active: true },
   { code: "SUMMER15", type: "15% off", usage: "301 uses", active: false },
 ];
 

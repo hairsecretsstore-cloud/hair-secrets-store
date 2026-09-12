@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     0,
   );
   const shippingCost =
-    typeof shipping === "number" ? shipping : subtotal >= 1000000 ? 0 : 100000;
+    typeof shipping === "number" ? shipping : subtotal >= 30000 ? 0 : 2500;
   const total = subtotal + shippingCost;
   // Payment Plan Policy: 70% deposit now, 30% on delivery.
   const amountDue = plan === "deposit" ? Math.round(total * 0.7) : total;
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
         subtotal,
         shipping: shippingCost,
         total,
-        currency: "UGX",
+        currency: "USD",
         items,
         shipping_address: shippingAddress ?? null,
         payment_method:
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
     try {
       const token = await createToken({
         amount: amountDue,
-        currency: "UGX",
+        currency: "USD",
         reference,
         customerEmail: email,
         customerFirstName: firstName,

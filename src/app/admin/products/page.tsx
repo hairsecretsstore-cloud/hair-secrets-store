@@ -131,7 +131,7 @@ export default function AdminProducts() {
                 <Field label="Origin" />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Base price (UGX)" type="number" />
+                <Field label="Base price (USD)" type="number" />
                 <Field label="Initial stock" type="number" />
               </div>
               <div>

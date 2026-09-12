@@ -135,8 +135,8 @@ export async function trackShipment(trackingNumber: string): Promise<{
 export function flatRate(): ShippingRate {
   return {
     productName: "DHL Express Worldwide",
-    totalPrice: 100000,
-    currency: "UGX",
+    totalPrice: 2500,
+    currency: "USD",
     estimatedDays: 5,
   };
 }

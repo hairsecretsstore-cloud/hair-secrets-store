@@ -65,17 +65,21 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative animate-fade-in">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="animate-float mt-8">
+          <div className="relative animate-fade-in px-2 pb-10 sm:px-8 lg:pb-4">
+            <div className="relative mx-auto max-w-sm lg:max-w-md">
+              {/* Decorative frame */}
+              <div className="pointer-events-none absolute -inset-3 rounded-[2rem] border border-brand-200/70 lg:-inset-4" />
+              {/* Primary editorial image */}
+              <div className="overflow-hidden rounded-[1.75rem] shadow-[var(--shadow-soft)]">
                 <ProductImage
                   src="/photos/hero-1.webp"
                   alt="Model wearing luxury raw human hair"
-                  ratio="aspect-[3/4]"
+                  ratio="aspect-[4/5]"
                   priority
                 />
               </div>
-              <div className="animate-float-slow">
+              {/* Overlapping secondary image */}
+              <div className="animate-float-slow absolute -bottom-8 -left-6 hidden w-36 overflow-hidden rounded-2xl border-[5px] border-background shadow-[var(--shadow-card)] sm:block lg:-left-10 lg:w-44">
                 <ProductImage
                   src="/photos/hero-2.webp"
                   alt="Model wearing sleek raw human hair"
@@ -83,14 +87,24 @@ export default async function HomePage() {
                   priority
                 />
               </div>
-            </div>
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-background px-6 py-3 text-center shadow-[var(--shadow-soft)]">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-brand-600">
-                Guaranteed
-              </p>
-              <p className="font-[family-name:var(--font-display)] text-lg text-espresso">
-                Raw &amp; Unprocessed
-              </p>
+              {/* Floating review chip */}
+              <div className="animate-float absolute -right-3 top-8 rounded-2xl bg-background/95 px-4 py-3 shadow-[var(--shadow-soft)] backdrop-blur lg:-right-6">
+                <div className="flex gap-0.5 text-sm leading-none text-brand-400">
+                  ★★★★★
+                </div>
+                <p className="mt-1.5 text-xs text-espresso/70">
+                  <span className="font-medium text-espresso">4.9</span> from 12k+ clients
+                </p>
+              </div>
+              {/* Guarantee ribbon */}
+              <div className="absolute -bottom-5 right-4 rounded-full bg-espresso px-5 py-2.5 text-center shadow-[var(--shadow-soft)] lg:right-8">
+                <p className="text-[9px] uppercase tracking-[0.25em] text-brand-300">
+                  Guaranteed
+                </p>
+                <p className="font-[family-name:var(--font-display)] text-base text-cream">
+                  Raw &amp; Unprocessed
+                </p>
+              </div>
             </div>
           </div>
         </div>

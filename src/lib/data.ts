@@ -59,7 +59,7 @@ export const collections: Collection[] = [
   },
 ];
 
-/** Single-price accessory (no length/texture). Price in whole UGX. */
+/** Single-price accessory (no length/texture). Price in US cents. */
 function accessory(
   id: string,
   slug: string,
@@ -95,14 +95,15 @@ function accessory(
 function variants(base: number, opts?: { newSeason?: boolean }) {
   const lengths = [12, 14, 16, 18, 20, 22, 24, 26];
   return lengths.map((len, i) => {
-    // Prices in whole Ugandan Shillings (UGX).
-    const price = (base + i * 3500) * 20;
+    // Prices in US cents (e.g. 18000 = $180.00).
+    const price = base + i * 3500;
     const lowStock = i === lengths.length - 1;
     return {
       id: `v-${len}`,
       length: len,
       price,
-      compareAt: opts?.newSeason ? undefined : Math.round((price * 1.18) / 1000) * 1000,
+      // Rounded to a whole dollar so strike-through prices read cleanly.
+      compareAt: opts?.newSeason ? undefined : Math.round((price * 1.18) / 100) * 100,
       stock: lowStock ? 3 : 8 + ((i * 7) % 20),
       sku: `HS-${len}-${base}`,
     };
@@ -305,7 +306,7 @@ export const products: Product[] = [
     "a1",
     "hss-bonnet",
     "HSS Satin Bonnet",
-    92000,
+    2424,
     "Signature satin-lined bonnet that protects your hair while you sleep.",
     "Our signature HSS satin bonnet, finished with branded ties, keeps your wig or natural hair smooth, frizz-free and protected overnight. The satin lining reduces friction and helps your hair retain moisture.",
     [
@@ -321,7 +322,7 @@ export const products: Product[] = [
     "a2",
     "wig-stands",
     "HSS Wig Stand",
-    93000,
+    2453,
     "Adjustable tripod stand for styling, drying and storing your units.",
     "A sturdy, height-adjustable tripod wig stand — perfect for styling, washing, drying and displaying your wigs and mannequin heads. Folds away neatly for travel and storage.",
     [
@@ -336,7 +337,7 @@ export const products: Product[] = [
     "a3",
     "mannequins",
     "HSS Customized Mannequin",
-    190000,
+    5000,
     "Branded mannequin head for styling, storing and displaying wigs.",
     "A premium customized HSS mannequin head — the ideal canvas for styling, customizing and displaying your units. Firm enough to pin into, with a realistic form for accurate fitting.",
     [
@@ -352,7 +353,7 @@ export const products: Product[] = [
     "a4",
     "wax-stick",
     "HSS Wax Stick",
-    93000,
+    2453,
     "Smoothing wax stick for sleek edges and flyaways.",
     "Tame flyaways and lay your edges with the HSS wax stick. A non-greasy, strong-hold formula that keeps your style sleek and polished all day without residue or build-up.",
     [
@@ -368,7 +369,7 @@ export const products: Product[] = [
     "a5",
     "wig-combs",
     "HSS Wig Combs",
-    48000,
+    1261,
     "Rose-gold combs for gentle detangling and parting.",
     "Elegant branded HSS combs for gentle detangling, sectioning and parting. Smooth teeth glide through wefts and natural hair without snagging — a beautiful, practical everyday essential.",
     [
@@ -383,7 +384,7 @@ export const products: Product[] = [
     "a6",
     "hd-wig-caps",
     "HD Wig Caps",
-    23000,
+    602,
     "Breathable HD caps for a smooth, secure base.",
     "Breathable, stretchy HD wig caps that flatten your hair and create a smooth, secure base for a flawless install. Nude tones blend with the scalp for a seamless finish.",
     [
@@ -398,7 +399,7 @@ export const products: Product[] = [
     "a7",
     "elastic-bands",
     "HSS Elastic Bands",
-    31000,
+    814,
     "Strong elastic bands to secure and lay your units.",
     "Durable elastic bands to secure your wig and help melt and lay your lace for a snug, natural fit. Strong stretch and hold without digging in.",
     [

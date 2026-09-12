@@ -55,8 +55,8 @@ create table if not exists product_variants (
   id uuid primary key default uuid_generate_v4(),
   product_id uuid not null references products(id) on delete cascade,
   length int not null,
-  price int not null,          -- whole UGX
-  compare_at int,              -- whole UGX
+  price int not null,          -- US cents
+  compare_at int,              -- US cents
   stock int not null default 0,
   sku text unique not null
 );
@@ -79,10 +79,10 @@ create table if not exists orders (
   email text not null,
   customer_name text,
   status order_status not null default 'pending',
-  subtotal int not null,       -- whole UGX
+  subtotal int not null,       -- US cents
   shipping int not null default 0,
   total int not null,
-  currency text not null default 'UGX',
+  currency text not null default 'USD',
   items jsonb not null,        -- snapshot of cart items
   shipping_address jsonb,
   payment_method text,         -- 'Mobile Money' | 'Card'
@@ -109,7 +109,7 @@ create table if not exists discounts (
   id uuid primary key default uuid_generate_v4(),
   code text unique not null,
   type text not null,          -- 'percent' | 'fixed' | 'free_shipping'
-  value int default 0,         -- percent (0-100) or whole UGX
+  value int default 0,         -- percent (0-100) or US cents
   min_subtotal int default 0,
   active boolean default true,
   usage_count int default 0,

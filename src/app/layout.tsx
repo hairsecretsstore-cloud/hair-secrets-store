@@ -7,6 +7,7 @@ import { Announcement } from "@/components/layout/announcement";
 import { Preloader } from "@/components/experience/preloader";
 import { Cursor } from "@/components/experience/cursor";
 import { ScrollProgress } from "@/components/experience/scroll-progress";
+import { NewsletterModal } from "@/components/experience/newsletter-modal";
 import { site } from "@/lib/site";
 
 const display = Cormorant_Garamond({
@@ -80,6 +81,7 @@ export default function RootLayout({
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <NewsletterModal />
       </body>
     </html>
   );

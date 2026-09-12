@@ -1,26 +1,260 @@
 @import "tailwindcss";
 
+/*
+  Hair Secrets Store — Luxury Raw Human Hair brand
+  Primary brand color: #AD918F (warm mauve / rosy taupe)
+  Accents: cream, white, nude, dark espresso
+*/
+
+@theme {
+  /* Brand palette */
+  --color-brand-50: #f8f4f3;
+  --color-brand-100: #efe6e4;
+  --color-brand-200: #e0cecb;
+  --color-brand-300: #ccaeaa;
+  --color-brand-400: #bd9d9a;
+  --color-brand-500: #ad918f; /* primary */
+  --color-brand-600: #98756f;
+  --color-brand-700: #7d5f5a;
+  --color-brand-800: #69514e;
+  --color-brand-900: #5a4644;
+  --color-brand-950: #2f2322;
+
+  /* Neutral warm palette */
+  --color-cream: #f7f2ec;
+  --color-cream-dark: #efe7dc;
+  --color-nude: #e8d9cd;
+  --color-nude-deep: #d8c3b3;
+  --color-espresso: #2a211f;
+  --color-espresso-soft: #3d302d;
+  --color-ink: #1a1513;
+
+  /* Semantic */
+  --color-background: #fdfbf9;
+  --color-foreground: #2a211f;
+  --color-muted: #8c7d76;
+
+  /* Typography */
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: "Jost", ui-sans-serif, system-ui, sans-serif;
+
+  /* Radii */
+  --radius-lg: 0.5rem;
+  --radius-xl: 1rem;
+
+  /* Shadows */
+  --shadow-soft: 0 10px 40px -12px rgba(90, 70, 68, 0.25);
+  --shadow-card: 0 4px 24px -8px rgba(90, 70, 68, 0.18);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdfbf9;
+  --foreground: #2a211f;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: var(--color-brand-200);
+    color: var(--color-espresso);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .container-lux {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 1024px) {
+    .container-lux { padding-inline: 2.5rem; }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--color-espresso);
+    color: var(--color-cream);
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+  }
+  .btn-primary:hover {
+    background: var(--color-brand-600);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-card);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--color-espresso);
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-brand-300);
+  }
+  .btn-outline:hover {
+    background: var(--color-brand-500);
+    color: #fff;
+    border-color: var(--color-brand-500);
+  }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--color-brand-600);
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .animate-fade-up {
+    animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.9s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { scrollbar-width: none; }
+
+  /* Slow float for hero imagery */
+  .animate-float { animation: float 7s ease-in-out infinite; }
+  .animate-float-slow { animation: float 9s ease-in-out infinite; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  /* Marquee ribbon */
+  .animate-marquee {
+    animation: marquee 32s linear infinite;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Shimmer sweep for luxury buttons */
+  .shine { position: relative; overflow: hidden; }
+  .shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-120%);
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.28) 50%,
+      transparent 80%
+    );
+  }
+  .shine:hover::after { animation: shine 0.9s ease; }
+  @keyframes shine {
+    to { transform: translateX(120%); }
+  }
+
+  /* Reveal-on-scroll for gallery images */
+  @keyframes kenburns {
+    from { transform: scale(1); }
+    to { transform: scale(1.06); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-float-slow,
+    .animate-marquee { animation: none !important; }
+  }
+}
+
+/* Fine-grain film texture overlay */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Custom cursor (desktop, fine pointer only) */
+@media (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9998;
+  pointer-events: none;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-brand-600);
+  transition: opacity 0.2s ease;
+}
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--color-brand-400);
+  transition: width 0.25s ease, height 0.25s ease, background 0.25s ease,
+    border-color 0.25s ease, opacity 0.2s ease;
+}
+.cursor-ring.is-active {
+  width: 54px;
+  height: 54px;
+  background: rgba(173, 145, 143, 0.12);
+  border-color: var(--color-brand-500);
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  z-index: 9999;
+  background: linear-gradient(90deg, var(--color-brand-400), var(--color-brand-600));
+  transform-origin: left;
+  will-change: transform;
 }

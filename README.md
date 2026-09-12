@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hair Secrets Store
 
-## Getting Started
+A premium, production-ready e-commerce website for **Hair Secrets Store**, a luxury Raw Human Hair brand.
 
-First, run the development server:
+Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**, and **Supabase**, with **DHL Express** shipping/tracking and **DPO Pay** (Mobile Money + cards) integrations.
+
+Brand color `#AD918F` with cream, white, nude, and dark espresso accents. Display type: Cormorant Garamond; UI type: Jost.
+
+---
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # fill in your keys
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build for production:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build && npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Storefront pages
 
-To learn more about Next.js, take a look at the following resources:
+| Route | Description |
+|-------|-------------|
+| `/` | Home — hero, collections, bestsellers, story, testimonials, newsletter |
+| `/shop` | Shop with texture/origin filters and sorting |
+| `/product/[slug]` | Product details — variant (length) picker, add to cart/wishlist |
+| `/collections` + `/collections/[slug]` | Collections index and detail |
+| `/about` | Brand story, ethical sourcing, hair-care guide |
+| `/cart` | Shopping bag with free-shipping progress |
+| `/checkout` | Contact, shipping, and DPO Pay payment (Mobile Money / card) |
+| `/wishlist` | Saved products (persisted locally) |
+| `/track` | DHL order tracking timeline |
+| `/contact` | Contact form + wholesale enquiries |
+| `/account` | Customer auth + orders/wishlist/addresses/profile |
+| `/order/[ref]` | Order confirmation with progress steps |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Admin dashboard (`/admin`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Auth-gated control panel: **Dashboard** (analytics), **Products**, **Inventory**,
+**Orders**, **Customers**, **Discounts**, **Content**, **Analytics**, **Settings**.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Architecture
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/                 # routes (storefront + admin + api)
+    api/checkout       # create order + initiate DPO payment
+    api/track          # look up order + DHL tracking
+    api/dpo/callback   # verify DPO payment on return
+  components/          # layout, product, admin, ui
+  lib/
+    data.ts            # demo catalog (swap for Supabase queries)
+    store.ts           # cart + wishlist (zustand, persisted)
+    supabase/          # browser + server + service clients
+    integrations/
+      dhl.ts           # DHL Express rates + tracking
+      dpo.ts           # DPO Pay token/verify/mobile-money
+supabase/schema.sql    # full database schema + RLS
+```
+
+## Connecting the backends
+
+The app **auto-detects** whether Supabase/DHL/DPO are configured. With no keys it
+runs in **demo mode** on built-in data so every page works immediately; the moment
+you add keys it switches to the live backend — no code changes required. Every
+live query is wrapped so a missing/empty table falls back to demo data rather than
+crashing.
+
+1. **Supabase** — create a project and run `supabase/schema.sql` in the SQL editor.
+   Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and
+   `SUPABASE_SERVICE_ROLE_KEY`. Then seed the catalog:
+   ```bash
+   npm run seed        # inserts collections, products & variants
+   ```
+   - Catalog reads flow through `src/lib/repository.ts` (live → demo fallback).
+   - Auth is live automatically: the **Account** page uses `supabase.auth`
+     (sign-up/in/out + real order history).
+   - The **admin** area is protected by `src/proxy.ts` (Next 16 middleware),
+     which requires a signed-in user whose `profiles.is_admin = true`.
+
+   **Make yourself an admin:** sign up on `/account`, then in Supabase run
+   ```sql
+   update profiles set is_admin = true where id = (
+     select id from auth.users where email = 'you@example.com'
+   );
+   ```
+2. **DHL** — set `DHL_API_KEY`, `DHL_API_SECRET`, `DHL_ACCOUNT_NUMBER`.
+   `src/app/api/track` and `lib/integrations/dhl.ts` then return live tracking
+   (flat-rate fallback until then).
+3. **DPO Pay** — set `DPO_COMPANY_TOKEN`. Checkout (`src/app/api/checkout`) then
+   creates a real transaction and redirects to DPO's hosted page;
+   `src/app/api/dpo/callback` verifies payment and marks the order paid. Point
+   your DPO dashboard callback at `https://YOUR-DOMAIN/api/dpo/callback`.
+
+## Notes on media
+
+Product imagery uses elegant tonal gradient placeholders (`ProductImage`) so the
+site is fully runnable without assets. Upload real photos to Supabase Storage and
+swap `ProductImage` for a Next `<Image>` — the data model already carries an
+`images[]` field per product.
+
+## SEO
+
+Per-page metadata, Open Graph tags, `sitemap.xml`, and `robots.txt` are all
+generated. Update `NEXT_PUBLIC_SITE_URL` for your domain.

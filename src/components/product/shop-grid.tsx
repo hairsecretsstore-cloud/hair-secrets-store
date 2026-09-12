@@ -26,8 +26,12 @@ export function ShopGrid({ allProducts }: { allProducts: Product[] }) {
 
   const filtered = useMemo(() => {
     let list = allProducts.filter((p) => {
-      const tOk = selTextures.length === 0 || selTextures.includes(p.texture);
-      const oOk = selOrigins.length === 0 || selOrigins.includes(p.origin);
+      const tOk =
+        selTextures.length === 0 ||
+        (!!p.texture && selTextures.includes(p.texture));
+      const oOk =
+        selOrigins.length === 0 ||
+        (!!p.origin && selOrigins.includes(p.origin));
       return tOk && oOk;
     });
     const price = (p: Product) => Math.min(...p.variants.map((v) => v.price));

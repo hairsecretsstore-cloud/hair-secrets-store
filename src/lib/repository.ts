@@ -30,13 +30,17 @@ function mapVariant(row: any): ProductVariant {
 function mapProduct(row: any): Product {
   const variants = (row.variants ?? []).map(mapVariant);
   variants.sort((a: ProductVariant, b: ProductVariant) => a.length - b.length);
+  const collectionSlug = row.collection?.slug ?? row.collection_slug ?? "";
+  const isAccessory =
+    row.category === "accessory" || collectionSlug === "hair-care";
   return {
     id: row.id,
     slug: row.slug,
     name: row.name,
-    texture: row.texture,
-    origin: row.origin,
-    collection: row.collection?.slug ?? row.collection_slug ?? "",
+    category: isAccessory ? "accessory" : "hair",
+    texture: isAccessory ? undefined : row.texture,
+    origin: isAccessory ? undefined : row.origin,
+    collection: collectionSlug,
     shortDescription: row.short_description ?? "",
     description: row.description ?? "",
     features: row.features ?? [],

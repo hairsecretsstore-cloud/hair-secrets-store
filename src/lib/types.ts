@@ -26,8 +26,10 @@ export interface Product {
   id: string;
   slug: string;
   name: string;
-  texture: HairTexture;
-  origin: HairOrigin;
+  /** "hair" bundles have texture/origin/length; "accessory" items don't. */
+  category?: "hair" | "accessory";
+  texture?: HairTexture;
+  origin?: HairOrigin;
   collection: string;
   shortDescription: string;
   description: string;
@@ -56,8 +58,9 @@ export interface CartItem {
   variantId: string;
   slug: string;
   name: string;
+  /** 0 for accessories (no length) */
   length: number;
-  texture: HairTexture;
+  texture?: HairTexture;
   price: number;
   tone: string;
   quantity: number;
@@ -67,8 +70,8 @@ export interface WishlistItem {
   productId: string;
   slug: string;
   name: string;
-  texture: HairTexture;
-  origin: HairOrigin;
+  texture?: HairTexture;
+  origin?: HairOrigin;
   price: number;
   tone: string;
 }

@@ -43,3 +43,5 @@ next-env.d.ts
 
 # Internal business documents (not part of the app)
 HHS Documents/
+
+.vercel

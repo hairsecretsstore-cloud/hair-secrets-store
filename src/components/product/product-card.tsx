@@ -13,6 +13,7 @@ export function ProductCard({ product }: { product: Product }) {
     s.items.some((i) => i.productId === product.id),
   );
   const from = Math.min(...product.variants.map((v) => v.price));
+  const isAccessory = product.category === "accessory";
 
   return (
     <div className="group relative">
@@ -21,7 +22,11 @@ export function ProductCard({ product }: { product: Product }) {
           <ProductImage
             tone={product.tone}
             src={`/photos/p-${product.slug}.webp`}
-            alt={`${product.name} — ${product.texture} raw human hair`}
+            alt={
+              isAccessory
+                ? product.name
+                : `${product.name} — ${product.texture} raw human hair`
+            }
           />
           <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-espresso/45 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100">
             <span className="mb-4 translate-y-2 rounded-full bg-background/90 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-espresso backdrop-blur transition-transform duration-500 group-hover:translate-y-0">
@@ -68,11 +73,19 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="mt-4">
         <div className="flex items-center gap-1 text-xs text-muted">
-          <span className="uppercase tracking-[0.15em] text-brand-600">
-            {product.origin}
-          </span>
-          <span>·</span>
-          <span>{product.texture}</span>
+          {isAccessory ? (
+            <span className="uppercase tracking-[0.15em] text-brand-600">
+              Hair Care &amp; Essentials
+            </span>
+          ) : (
+            <>
+              <span className="uppercase tracking-[0.15em] text-brand-600">
+                {product.origin}
+              </span>
+              <span>·</span>
+              <span>{product.texture}</span>
+            </>
+          )}
         </div>
         <Link href={`/product/${product.slug}`}>
           <h3 className="mt-1 font-[family-name:var(--font-display)] text-xl text-espresso transition-colors group-hover:text-brand-600">
@@ -81,7 +94,13 @@ export function ProductCard({ product }: { product: Product }) {
         </Link>
         <div className="mt-2 flex items-center justify-between">
           <span className="text-sm text-espresso">
-            From <span className="font-medium">{formatPrice(from)}</span>
+            {isAccessory ? (
+              <span className="font-medium">{formatPrice(from)}</span>
+            ) : (
+              <>
+                From <span className="font-medium">{formatPrice(from)}</span>
+              </>
+            )}
           </span>
           <span className="flex items-center gap-1 text-xs text-muted">
             <Star className="h-3.5 w-3.5 fill-brand-400 text-brand-400" />

@@ -53,7 +53,7 @@ export default function WishlistPage() {
               </Link>
               <div className="mt-3">
                 <p className="text-xs uppercase tracking-[0.15em] text-brand-600">
-                  {item.origin} · {item.texture}
+                  {item.texture ? `${item.origin} · ${item.texture}` : "Hair Care & Essentials"}
                 </p>
                 <Link href={`/product/${item.slug}`}>
                   <h3 className="mt-1 font-[family-name:var(--font-display)] text-lg text-espresso group-hover:text-brand-600">
@@ -66,7 +66,10 @@ export default function WishlistPage() {
                 {product && (
                   <button
                     onClick={() => {
-                      const v = product.variants[2];
+                      const v =
+                        product.variants[
+                          product.category === "accessory" ? 0 : 2
+                        ] ?? product.variants[0];
                       add({
                         productId: product.id,
                         variantId: v.id,

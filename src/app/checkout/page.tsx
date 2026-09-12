@@ -251,7 +251,7 @@ export default function CheckoutPage() {
                 <div className="flex-1 text-sm">
                   <p className="text-espresso">{i.name}</p>
                   <p className="text-muted">
-                    {i.length}&quot; · Qty {i.quantity}
+                    {i.length > 0 ? `${i.length}" · ` : ""}Qty {i.quantity}
                   </p>
                 </div>
                 <span className="text-sm text-espresso">

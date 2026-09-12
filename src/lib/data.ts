@@ -48,7 +48,49 @@ export const collections: Collection[] = [
       "Prized for its natural silkiness and single-drawn fullness from root to tip.",
     tone: TONES.nude,
   },
+  {
+    id: "c5",
+    slug: "hair-care",
+    name: "Hair Care & Essentials",
+    tagline: "Considered care for considered hair.",
+    description:
+      "Carefully selected essentials to protect, maintain and preserve your wigs, extensions and natural hair — because a beautiful piece deserves considered care.",
+    tone: TONES.cream,
+  },
 ];
+
+/** Single-price accessory (no length/texture). Price in whole UGX. */
+function accessory(
+  id: string,
+  slug: string,
+  name: string,
+  price: number,
+  shortDescription: string,
+  description: string,
+  features: string[],
+  tone: string,
+  opts?: { bestseller?: boolean; isNew?: boolean; stock?: number },
+): Product {
+  return {
+    id,
+    slug,
+    name,
+    category: "accessory",
+    collection: "hair-care",
+    shortDescription,
+    description,
+    features,
+    images: [],
+    tone,
+    variants: [
+      { id: "v-std", length: 0, price, stock: opts?.stock ?? 25, sku: `HS-${slug}` },
+    ],
+    rating: 4.9,
+    reviewCount: 0,
+    bestseller: opts?.bestseller,
+    isNew: opts?.isNew,
+  };
+}
 
 function variants(base: number, opts?: { newSeason?: boolean }) {
   const lengths = [12, 14, 16, 18, 20, 22, 24, 26];
@@ -257,6 +299,116 @@ export const products: Product[] = [
     rating: 5.0,
     reviewCount: 76,
   },
+
+  // ---- Hair Care & Essentials (accessories) ----
+  accessory(
+    "a1",
+    "hss-bonnet",
+    "HSS Satin Bonnet",
+    92000,
+    "Signature satin-lined bonnet that protects your hair while you sleep.",
+    "Our signature HSS satin bonnet, finished with branded ties, keeps your wig or natural hair smooth, frizz-free and protected overnight. The satin lining reduces friction and helps your hair retain moisture.",
+    [
+      "Smooth satin lining",
+      "Reduces frizz & breakage",
+      "Adjustable branded ties",
+      "Preserves styles overnight",
+    ],
+    TONES.mauve,
+    { bestseller: true },
+  ),
+  accessory(
+    "a2",
+    "wig-stands",
+    "HSS Wig Stand",
+    93000,
+    "Adjustable tripod stand for styling, drying and storing your units.",
+    "A sturdy, height-adjustable tripod wig stand — perfect for styling, washing, drying and displaying your wigs and mannequin heads. Folds away neatly for travel and storage.",
+    [
+      "Height-adjustable tripod",
+      "Stable, non-slip base",
+      "Folds for easy storage",
+      "Ideal for styling & drying",
+    ],
+    TONES.mocha,
+  ),
+  accessory(
+    "a3",
+    "mannequins",
+    "HSS Customized Mannequin",
+    190000,
+    "Branded mannequin head for styling, storing and displaying wigs.",
+    "A premium customized HSS mannequin head — the ideal canvas for styling, customizing and displaying your units. Firm enough to pin into, with a realistic form for accurate fitting.",
+    [
+      "Realistic form for fitting",
+      "Firm — holds pins securely",
+      "Branded HSS finish",
+      "Perfect for styling & display",
+    ],
+    TONES.honey,
+    { isNew: true },
+  ),
+  accessory(
+    "a4",
+    "wax-stick",
+    "HSS Wax Stick",
+    93000,
+    "Smoothing wax stick for sleek edges and flyaways.",
+    "Tame flyaways and lay your edges with the HSS wax stick. A non-greasy, strong-hold formula that keeps your style sleek and polished all day without residue or build-up.",
+    [
+      "Strong, lasting hold",
+      "Non-greasy formula",
+      "Tames edges & flyaways",
+      "No flaking or residue",
+    ],
+    TONES.noir,
+    { bestseller: true },
+  ),
+  accessory(
+    "a5",
+    "wig-combs",
+    "HSS Wig Combs",
+    48000,
+    "Rose-gold combs for gentle detangling and parting.",
+    "Elegant branded HSS combs for gentle detangling, sectioning and parting. Smooth teeth glide through wefts and natural hair without snagging — a beautiful, practical everyday essential.",
+    [
+      "Gentle, smooth teeth",
+      "Detangles without snagging",
+      "Precise parting & sectioning",
+      "Signature rose-gold finish",
+    ],
+    TONES.nude,
+  ),
+  accessory(
+    "a6",
+    "hd-wig-caps",
+    "HD Wig Caps",
+    23000,
+    "Breathable HD caps for a smooth, secure base.",
+    "Breathable, stretchy HD wig caps that flatten your hair and create a smooth, secure base for a flawless install. Nude tones blend with the scalp for a seamless finish.",
+    [
+      "Breathable & stretchy",
+      "Smooth, secure base",
+      "Skin-tone blend",
+      "Comfortable all-day wear",
+    ],
+    TONES.cream,
+  ),
+  accessory(
+    "a7",
+    "elastic-bands",
+    "HSS Elastic Bands",
+    31000,
+    "Strong elastic bands to secure and lay your units.",
+    "Durable elastic bands to secure your wig and help melt and lay your lace for a snug, natural fit. Strong stretch and hold without digging in.",
+    [
+      "Strong, durable stretch",
+      "Secures units firmly",
+      "Helps lay lace flat",
+      "Comfortable hold",
+    ],
+    TONES.nude,
+  ),
 ];
 
 export function getProduct(slug: string) {

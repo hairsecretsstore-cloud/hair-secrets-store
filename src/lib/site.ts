@@ -35,9 +35,14 @@ export const site = {
     "To establish Hair Secrets Store as a distinguished premium hair house, recognized for refined craftsmanship, considered client experiences and enduring standards of quality.",
   couriers: ["DHL", "FedEx", "UPS"],
   socials: {
-    instagram: "https://instagram.com/hairsecretsstore",
-    facebook: "https://facebook.com/hairsecretsstore",
-    tiktok: "https://tiktok.com/@hairsecretsstore",
+    instagram: "https://www.instagram.com/hairsecretsstore",
+    instagramHairMastery: "https://www.instagram.com/hairmastery2023",
+    tiktok: "https://www.tiktok.com/@hairsecretsstore",
+    facebook: "https://www.facebook.com/share/1HfshscBwj/?mibextid=wwXIfr",
+    x: "https://x.com/hairsecretstore",
+    threads: "https://www.threads.com/@hairsecretsstore",
+    snapchat: "https://snapchat.com/t/jMeRtNBN",
+    linkedin: "https://www.linkedin.com/company/hair-secrets-store/",
   },
 } as const;
 

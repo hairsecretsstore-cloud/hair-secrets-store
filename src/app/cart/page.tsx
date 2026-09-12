@@ -73,7 +73,9 @@ export default function CartPage() {
                         {item.name}
                       </Link>
                       <p className="text-sm text-muted">
-                        {item.texture} · {item.length}&quot;
+                        {item.length > 0
+                          ? `${item.texture} · ${item.length}"`
+                          : "Hair Care & Essentials"}
                       </p>
                     </div>
                     <button

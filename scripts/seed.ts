@@ -51,8 +51,10 @@ async function main() {
         {
           slug: p.slug,
           name: p.name,
-          texture: p.texture,
-          origin: p.origin,
+          // texture/origin are NOT NULL in the schema; accessories have none,
+          // so fall back to placeholders (the app hides them for hair-care).
+          texture: p.texture ?? "Accessory",
+          origin: p.origin ?? "Hair Secrets",
           collection_id: collectionIdBySlug.get(p.collection) ?? null,
           short_description: p.shortDescription,
           description: p.description,

@@ -18,7 +18,11 @@ import { formatPrice, cn } from "@/lib/utils";
 import { ProductImage } from "@/components/ui/product-image";
 
 export function ProductDetail({ product }: { product: Product }) {
-  const [variant, setVariant] = useState(product.variants[2]);
+  const isAccessory = product.category === "accessory";
+  // Hair defaults to a mid length (16"); accessories have a single variant.
+  const [variant, setVariant] = useState(
+    product.variants[isAccessory ? 0 : 2] ?? product.variants[0],
+  );
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
@@ -96,7 +100,7 @@ export function ProductDetail({ product }: { product: Product }) {
         <div className="flex items-center gap-2 text-xs text-muted">
           <Link href="/shop" className="hover:text-brand-600">Shop</Link>
           <span>/</span>
-          <span>{product.origin}</span>
+          <span>{isAccessory ? "Hair Care & Essentials" : product.origin}</span>
         </div>
         <h1 className="mt-3 text-4xl text-espresso lg:text-5xl">{product.name}</h1>
 
@@ -134,40 +138,53 @@ export function ProductDetail({ product }: { product: Product }) {
           {product.description}
         </p>
 
-        {/* Length selector */}
-        <div className="mt-8">
-          <div className="mb-3 flex items-center justify-between">
-            <span className="text-sm font-medium text-espresso">
-              Length: <span className="text-brand-600">{variant.length}"</span>
-            </span>
+        {/* Length selector (hair only) */}
+        {isAccessory ? (
+          <div className="mt-8">
             <span
               className={cn(
                 "text-xs",
                 variant.stock <= 3 ? "text-red-500" : "text-green-700",
               )}
             >
-              {variant.stock <= 3
-                ? `Only ${variant.stock} left`
-                : "In stock"}
+              {variant.stock <= 3 ? `Only ${variant.stock} left` : "In stock"}
             </span>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {product.variants.map((v) => (
-              <button
-                key={v.id}
-                onClick={() => setVariant(v)}
+        ) : (
+          <div className="mt-8">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-sm font-medium text-espresso">
+                Length: <span className="text-brand-600">{variant.length}"</span>
+              </span>
+              <span
                 className={cn(
-                  "min-w-[3.25rem] rounded-full border px-3 py-2 text-sm transition",
-                  variant.id === v.id
-                    ? "border-espresso bg-espresso text-cream"
-                    : "border-brand-200 text-espresso hover:border-brand-500",
+                  "text-xs",
+                  variant.stock <= 3 ? "text-red-500" : "text-green-700",
                 )}
               >
-                {v.length}"
-              </button>
-            ))}
+                {variant.stock <= 3
+                  ? `Only ${variant.stock} left`
+                  : "In stock"}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {product.variants.map((v) => (
+                <button
+                  key={v.id}
+                  onClick={() => setVariant(v)}
+                  className={cn(
+                    "min-w-[3.25rem] rounded-full border px-3 py-2 text-sm transition",
+                    variant.id === v.id
+                      ? "border-espresso bg-espresso text-cream"
+                      : "border-brand-200 text-espresso hover:border-brand-500",
+                  )}
+                >
+                  {v.length}"
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Qty + add */}
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">

@@ -1,4 +1,5 @@
 import { site } from "./site";
+import { formatPrice } from "./utils";
 
 /**
  * Transactional email via Resend (https://resend.com).
@@ -77,6 +78,86 @@ function button(href: string, label: string) {
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px auto;"><tr><td style="border-radius:999px;background:${ESPRESSO};">
     <a href="${href}" style="display:inline-block;padding:14px 30px;color:${CREAM};text-decoration:none;font-size:14px;letter-spacing:1px;">${label}</a>
   </td></tr></table>`;
+}
+
+export function orderConfirmationEmail(o: {
+  name: string;
+  reference: string;
+  items: { name: string; length?: number; quantity: number; price: number }[];
+  subtotal: number;
+  shipping: number;
+  discount?: number;
+  total: number;
+}) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || site.url;
+  const orderUrl = `${siteUrl}/order/${encodeURIComponent(o.reference)}`;
+  const firstName = o.name?.split(" ")[0] || "there";
+
+  const rows = o.items
+    .map(
+      (i) => `
+      <tr>
+        <td style="font-size:14px;color:${ESPRESSO};padding:8px 0;border-bottom:1px solid #efe6e4;">
+          ${i.name}${i.length ? ` · ${i.length}"` : ""}
+          <span style="color:#8c7d76;"> × ${i.quantity}</span>
+        </td>
+        <td style="font-size:14px;color:${ESPRESSO};text-align:right;padding:8px 0;border-bottom:1px solid #efe6e4;">
+          ${formatPrice(i.price * i.quantity)}
+        </td>
+      </tr>`,
+    )
+    .join("");
+
+  const summaryRow = (label: string, value: string, strong = false) => `
+    <tr><td style="font-size:13px;color:#8c7d76;padding:3px 0;">${label}</td>
+        <td style="font-size:${strong ? "15px" : "13px"};color:${ESPRESSO};text-align:right;padding:3px 0;${strong ? "font-weight:bold;" : ""}">${value}</td></tr>`;
+
+  const html = shell(`
+    <p style="font-size:15px;margin:0 0 8px;">Hi ${firstName},</p>
+    <h1 style="font-family:Georgia,serif;font-size:24px;margin:0 0 12px;color:${ESPRESSO};">Thank you for your order ✦</h1>
+    <p style="font-size:14px;line-height:1.6;color:#5a4644;margin:0 0 20px;">
+      We&rsquo;ve received your order <strong>${o.reference}</strong> and are preparing it with care. You&rsquo;ll receive tracking details as soon as it ships.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 12px;">${rows}</table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${CREAM};border-radius:12px;padding:16px;">
+      ${summaryRow("Subtotal", formatPrice(o.subtotal))}
+      ${summaryRow("Shipping", o.shipping === 0 ? "Free" : formatPrice(o.shipping))}
+      ${o.discount && o.discount > 0 ? summaryRow("Discount", `− ${formatPrice(o.discount)}`) : ""}
+      ${summaryRow("Total", formatPrice(o.total), true)}
+    </table>
+    ${button(orderUrl, "View your order")}
+    <p style="font-size:13px;line-height:1.6;color:#8c7d76;margin:16px 0 0;text-align:center;">
+      Questions? Reply to this email or reach us at ${site.email}.
+    </p>
+  `);
+
+  return {
+    subject: `Order confirmed — ${o.reference} ✦`,
+    html,
+  };
+}
+
+export function welcomeEmail(o: { email: string; code: string }) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || site.url;
+  const html = shell(`
+    <h1 style="font-family:Georgia,serif;font-size:26px;margin:0 0 12px;color:${ESPRESSO};text-align:center;">Welcome to the inner circle ✦</h1>
+    <p style="font-size:14px;line-height:1.6;color:#5a4644;margin:0 0 20px;text-align:center;">
+      Thank you for joining Hair Secrets Store. As promised, here&rsquo;s <strong>10% off</strong> your first order — plus you&rsquo;ll be first to know about restocks, new textures and private sales.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${CREAM};border-radius:12px;padding:20px;text-align:center;margin:0 0 8px;">
+      <tr><td style="font-size:11px;letter-spacing:2px;color:#8c7d76;text-transform:uppercase;padding-bottom:6px;">Your code</td></tr>
+      <tr><td style="font-family:Georgia,serif;font-size:28px;letter-spacing:3px;color:${ESPRESSO};font-weight:bold;">${o.code}</td></tr>
+    </table>
+    ${button(`${siteUrl}/shop`, "Shop the collection")}
+    <p style="font-size:12px;line-height:1.6;color:#8c7d76;margin:16px 0 0;text-align:center;">
+      Apply <strong>${o.code}</strong> at checkout. Length. Luxury. Legacy.
+    </p>
+  `);
+
+  return {
+    subject: "Your 10% welcome gift ✦",
+    html,
+  };
 }
 
 export function shippedEmail(o: {

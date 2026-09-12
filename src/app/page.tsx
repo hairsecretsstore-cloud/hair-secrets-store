@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/product/product-card";
 import { ProductImage } from "@/components/ui/product-image";
 import { Reveal } from "@/components/ui/reveal";
 import { Marquee } from "@/components/marquee";
+import { NewsletterForm } from "@/components/newsletter-form";
 
 export const revalidate = 300;
 
@@ -356,17 +357,7 @@ export default async function HomePage() {
             <p className="mt-4 text-espresso/70">
               Be first to know about restocks, new textures, and private sales.
             </p>
-            <form className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row">
-              <input
-                type="email"
-                required
-                placeholder="Your email address"
-                className="w-full rounded-full border border-brand-200 bg-background px-5 py-3.5 text-sm outline-none focus:border-brand-500"
-              />
-              <button type="submit" className="btn btn-primary shine shrink-0">
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm source="homepage" />
           </div>
         </div>
       </section>

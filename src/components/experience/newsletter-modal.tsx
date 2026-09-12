@@ -51,7 +51,7 @@ export function NewsletterModal() {
     persistSeen();
   }
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Please enter a valid email address.");
@@ -64,7 +64,15 @@ export function NewsletterModal() {
     setError("");
     setDone(true);
     persistSeen();
-    // TODO: wire to Resend/Supabase newsletter list.
+    try {
+      await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "popup", consent }),
+      });
+    } catch {
+      /* non-blocking: we've already thanked them */
+    }
     setTimeout(() => setOpen(false), 2600);
   }
 

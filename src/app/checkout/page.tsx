@@ -21,10 +21,49 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [country, setCountry] = useState("Uganda");
+  const [promo, setPromo] = useState("");
+  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [discount, setDiscount] = useState(0);
+  const [promoMsg, setPromoMsg] = useState<string | null>(null);
+  const [promoLoading, setPromoLoading] = useState(false);
 
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
   const shipping = subtotal >= FREE_SHIP_THRESHOLD ? 0 : 2500;
-  const total = subtotal + shipping;
+  const total = Math.max(0, subtotal + shipping - discount);
+
+  async function applyPromo() {
+    if (!promo.trim()) return;
+    setPromoLoading(true);
+    setPromoMsg(null);
+    try {
+      const res = await fetch("/api/discount", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promo, subtotal, shipping }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setDiscount(data.amount);
+        setAppliedCode(data.code);
+        setPromoMsg(`Code ${data.code} applied`);
+      } else {
+        setDiscount(0);
+        setAppliedCode(null);
+        setPromoMsg(data.error ?? "Invalid code");
+      }
+    } catch {
+      setPromoMsg("Could not check that code");
+    } finally {
+      setPromoLoading(false);
+    }
+  }
+
+  function removePromo() {
+    setDiscount(0);
+    setAppliedCode(null);
+    setPromo("");
+    setPromoMsg(null);
+  }
   // HSS Payment Plan Policy: pay in full, or secure with a 70% deposit
   // (30% balance due on delivery).
   const amountDue = plan === "deposit" ? Math.round(total * 0.7) : total;
@@ -58,6 +97,7 @@ export default function CheckoutPage() {
           lastName: rest.join(" "),
           shipping,
           plan,
+          code: appliedCode ?? "",
           paymentMethod: method === "mobile" ? "Mobile Money" : "Card",
           shippingAddress: {
             address: fd.get("address"),
@@ -260,12 +300,58 @@ export default function CheckoutPage() {
               </li>
             ))}
           </ul>
+          {/* Promo code */}
+          <div className="mt-5 border-t border-brand-200 pt-5">
+            {appliedCode ? (
+              <div className="flex items-center justify-between rounded-xl bg-brand-50 px-4 py-3 text-sm">
+                <span className="text-espresso">
+                  <span className="font-medium">{appliedCode}</span> applied
+                </span>
+                <button
+                  type="button"
+                  onClick={removePromo}
+                  className="text-xs uppercase tracking-[0.12em] text-brand-600 hover:text-espresso"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="flex gap-2">
+                  <input
+                    value={promo}
+                    onChange={(e) => setPromo(e.target.value.toUpperCase())}
+                    placeholder="Promo code"
+                    className="w-full rounded-full border border-brand-200 bg-background px-4 py-2.5 text-sm uppercase tracking-[0.1em] outline-none focus:border-brand-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={applyPromo}
+                    disabled={promoLoading}
+                    className="btn btn-outline shrink-0 px-5 py-2.5 text-sm disabled:opacity-60"
+                  >
+                    {promoLoading ? "…" : "Apply"}
+                  </button>
+                </div>
+                {promoMsg && (
+                  <p className="mt-2 text-xs text-red-500">{promoMsg}</p>
+                )}
+              </>
+            )}
+          </div>
+
           <dl className="mt-5 space-y-2 border-t border-brand-200 pt-5 text-sm">
             <Row label="Subtotal" value={formatPrice(subtotal)} />
             <Row
               label="Shipping"
               value={shipping === 0 ? "Free" : formatPrice(shipping)}
             />
+            {discount > 0 && (
+              <Row
+                label={`Discount${appliedCode ? ` (${appliedCode})` : ""}`}
+                value={`− ${formatPrice(discount)}`}
+              />
+            )}
             <div className="flex justify-between border-t border-brand-200 pt-3 text-base font-medium text-espresso">
               <dt>Total</dt>
               <dd>{formatPrice(total)}</dd>

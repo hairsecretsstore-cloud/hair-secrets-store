@@ -129,6 +129,21 @@ create table if not exists messages (
 );
 
 -- ---------------------------------------------------------------------------
+-- Newsletter subscribers
+-- ---------------------------------------------------------------------------
+create table if not exists subscribers (
+  id uuid primary key default uuid_generate_v4(),
+  email text unique not null,
+  source text,                 -- 'popup' | 'footer' | 'homepage'
+  consent boolean default true,
+  created_at timestamptz not null default now()
+);
+
+-- Order-level discount (applied promo code)
+alter table orders add column if not exists discount_code text;
+alter table orders add column if not exists discount_amount int default 0;
+
+-- ---------------------------------------------------------------------------
 -- Row Level Security
 -- ---------------------------------------------------------------------------
 alter table profiles enable row level security;
@@ -182,6 +197,19 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function handle_new_user();
+
+-- Subscribers: written by the server (service role) only; no public access.
+alter table subscribers enable row level security;
+drop policy if exists "admin read subscribers" on subscribers;
+create policy "admin read subscribers" on subscribers
+  for select using (exists (select 1 from profiles p where p.id = auth.uid() and p.is_admin));
+
+-- Seed the standing promo codes (idempotent).
+insert into discounts (code, type, value, min_subtotal, active)
+values
+  ('WELCOME10', 'percent', 10, 0, true),
+  ('LUXE20', 'percent', 20, 50000, true)
+on conflict (code) do nothing;
 
 -- Refresh the PostgREST schema cache so the API sees the new tables immediately
 notify pgrst, 'reload schema';
